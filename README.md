@@ -45,7 +45,12 @@ Here is example of the result of the analysis:
 
 * Average: Analysis of average CPU utilization. It includes the number of instances with CPU less than 5%, 10%, and 30%. And the distribution of average CPU utilization.
 * Maximum: Analysis of maximum CPU utilization. Similar to above.
+* Efficiency: Efficiency score compared to other users.
 * InstanceTypes: Instance types distribution.
+* Regions: Distribution of instances across regions.
+* UnderUtilized: List of under-utilized instances.
+* Threshold: Threshold for Avg and Max CPU utilization for under-utilized instances.
+
 ```
     "Summary": {  
       "Average": {  
