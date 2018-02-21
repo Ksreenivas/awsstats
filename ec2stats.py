@@ -85,6 +85,7 @@ def CollectCpuStatsAll(regions, accessKey, secretAccess):
     instances = {'Instances':[], 'OwnerId':'', 'Threshold':{'Avg':5, 'Max':30}}
     for region in regions:
         try:
+            print("Collecting stats in %s ..." %region)
             ec2Client = boto3.client('ec2', aws_access_key_id=accessKey, aws_secret_access_key=secretAccess, region_name=region)
             cw = boto3.client('cloudwatch', region_name=region, aws_access_key_id=accessKey, aws_secret_access_key=secretAccess)
         except botocore.exceptions.ClientError as e:
@@ -233,6 +234,7 @@ def AnalyzeStats(instances, url, verbose, threshold):
     :param url: server address
     :param verbose: print result on screen
     '''
+    print("Analyzing stats ...")
     headers = {'Content-type': 'application/json'}
     instances['Threshold']['Avg'] = int(threshold[0])
     instances['Threshold']['Max'] = int(threshold[1])
