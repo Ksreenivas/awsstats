@@ -236,7 +236,7 @@ def AnalyzeStats(instances, url, verbose, threshold):
     headers = {'Content-type': 'application/json'}
     instances['Threshold']['Avg'] = int(threshold[0])
     instances['Threshold']['Max'] = int(threshold[1])
-    response = requests.post(url, data=json.dumps(instances,default=DatetimeConverter), headers=headers, verify=False)
+    response = requests.post(url, data=json.dumps(instances,default=DatetimeConverter), headers=headers, verify=True)
     result = response.json()
     SaveObject(result, 'ec2summary')
     if verbose:
