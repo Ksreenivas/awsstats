@@ -34,6 +34,8 @@ i-04617102e11910453 :us-west-2
 
 A better way to view the result is to visit https://customer.fittedcloud.com/v1/ec2stats and upload the ec2stats-xxxx-xx-xx.json file.
 
+![Alt Visulized Result](images/ec2stats.png)
+
 Other options:
 
     -a False: Skip analysis
