@@ -17,6 +17,7 @@
 # Date: 2/21/2018
 #----------------------------------------------------------------------------
 
+import os
 import sys
 import json
 import datetime
@@ -27,14 +28,13 @@ import botocore
 import requests
 from hashlib import sha256
 import logging
+from ConfigParser import SafeConfigParser
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger('boto3').setLevel(logging.WARNING)
 logging.getLogger("botocore").setLevel(logging.WARNING)
 
-ACCESS_KEY = ''
-SECRET_ACCESS = ''
 REGION_LIST = [
     'us-east-1',       # US East (N. Virginia)
     'us-west-2',       # US West (Oregon)
@@ -259,30 +259,59 @@ def LoadStatsFile(fileName):
         return []
     return instances
 
+def GetCredential(args):
+    '''
+    Try get get credential from 1. command args, 2. botoconfig, 3. user input.
+    :param args: command line args
+    :return: access_key and secret_access_key
+    '''
+    accessKey, secretAccess = args.accessKey, args.secretAccess
+    if accessKey and secretAccess:
+        return accessKey, secretAccess
+
+    # Look for credentials file in user specified path or current path.
+    if args.configPath:
+        configFile = os.path.join(args.configPath, 'credentials')
+    else:
+        configFile = os.path.abspath(os.path.join(os.path.dirname(__file__), '.botoconfig', 'credentials'))
+        
+    parser = SafeConfigParser()
+    try:
+        parser.read(configFile)
+        accessKey = parser.get(args.profile, "aws_access_key_id")
+        secretAccess = parser.get(args.profile, "aws_secret_access_key")
+    except:
+        pass
+
+    while not accessKey:
+        accessKey = raw_input('Access Key:')
+    while not secretAccess:
+        secretAccess = raw_input('Secret Access Key:')
+
+    return accessKey, secretAccess
+
 def ParseArgs(arg):
     parser = argparse.ArgumentParser()
-    parser.add_argument("-k", "--access_key", dest="accessKey", help="access key", default=ACCESS_KEY, required=False)
-    parser.add_argument("-s", "--secret_key", dest="secretAccess", help="secret access key", default=SECRET_ACCESS, required=False)
+    parser.add_argument("-k", "--access_key", dest="accessKey", help="access key", default='', required=False)
+    parser.add_argument("-s", "--secret_key", dest="secretAccess", help="secret access key", default='', required=False)
     parser.add_argument("-u", "--url", dest="url", help="api server url", default=SERVER_URL, required=False)
     parser.add_argument("-a", "--analyze", dest="analyze", help="send stats to server to analyze", type=bool, default=True, required=False)
     parser.add_argument("-l", "--load_stats", dest="loadStats", help="stats file name to load data from", default='', required=False)
     parser.add_argument("-v", "--verbose", dest="verbose", help="print summary details", type=bool, default=True, required=False)
     parser.add_argument("-t", "--threshold", dest="threshold", help="[average, max] CPU threshold ", nargs=2, default=[5,30], required=False)
+    parser.add_argument("-c", "--config_path", dest="configPath", help="Parent path to config file", default='', required=False)
+    parser.add_argument("-p", "--profile", dest="profile", help="AWS credential profile", default='default', required=False)
     args = parser.parse_args()
     return args        
         
 if __name__ == "__main__":
 
     args = ParseArgs(sys.argv[1:])
-    accessKey, secretAccess = args.accessKey, args.secretAccess
 
     if args.loadStats:
         instances = LoadStatsFile(args.loadStats)
     else:
-        while not accessKey:
-            accessKey = raw_input('Access Key:')
-        while not secretAccess:
-            secretAccess = raw_input('Secret Access Key:')
+        accessKey, secretAccess = GetCredential(args)
         instances = CollectCpuStatsAll(REGION_LIST, accessKey, secretAccess)
         SaveObject(instances, 'ec2stats')
         

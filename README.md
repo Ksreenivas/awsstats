@@ -42,6 +42,8 @@ Other options:
     -v False: Turn off printing on screen
     -l fileName: Load existing stats file instead of collecting from Cloudwatch
     -t 5 10: Return under-utilized instance with Average CPU <= 5% and Maximum CPU <= 10%
+    -c C:\Users\Bezos\.aws: Parent directory of aws config
+    -p dev: profile
 
 Here is example of the result of the analysis:
 
