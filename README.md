@@ -2,6 +2,10 @@
 This tool collects AWS EC2 Cloudwatch stats of all EC2 instances in selected regions for the last two weeks and save them to a json file with a name such as ec2stats-2018-02-15.json.
 
     python e2stats.py -k YOUR_ACCESS_KEY -s YOUR_SECRET_ACCESS_KEY
+    
+Or specify the directory of the aws credential file, otherwise it will look for .botoconfig in current directory.
+
+    python e2stats.py -c C:\Users\Bezos\.aws
 
 It calls REST API to analyze the logs and the result will be printed on screen and saved as a json file with a name such as ec2summary-2018-02-15.
 
