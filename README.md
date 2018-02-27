@@ -129,4 +129,4 @@ Here is example of the result of the analysis:
     }  
 ```
 
-
+### Blog: [A Simple Open Source Tool for EC2 RightSizing Analysis](https://www.fittedcloud.com/blog/simple-open-source-tool-ec2-rightsizing-analysis/)
