@@ -150,7 +150,7 @@ def PrintInstanceRegions(summary):
     print("\n{0}Distribution of Regions{1}".format('-'*35, '-'*35))
     s = ''
     for i, t in enumerate(sorted(regions, key=lambda x: x[1], reverse=True)):
-        s += ("{:10s}:{:4d}".format(t[0], t[1]))
+        s += ("{:10s}:{:4s}".format(t[0], t[1]))
         if i != 0 and i%4 == 0:
             print("{}".format(s))
             s = ''
@@ -166,7 +166,7 @@ def PrintInstanceTypes(summary):
     print("\n{0}Distribution of Instance Types{1}".format('-'*32, '-'*31))
     s = ''
     for i, t in enumerate(sorted(instanceTypes, key=lambda x: x[1], reverse=True)):
-        s += ("{:10s}:{:4d}".format(t[0], t[1]))
+        s += ("{:10s}:{:4s}".format(t[0], t[1]))
         if i != 0 and i%4 == 0:
             print("{}".format(s))
             s = ''
@@ -216,9 +216,16 @@ def PrintSummary(result):
 
         k += ' | '
         v += ' | '
-        for i in ['Min', 'Max', 'Mean', '<=5%', '<=10%', '<=30%']:
+        for i in ['Min', 'Max', 'Mean']:
             k += "{:<7s}".format(i)
-            v += "{:<7s}".format(str(summary[metric][i]))
+            v += "{:<7s}".format(str(summary[metric][i])+'%')
+
+        k += "{:<7s}".format('<=5')
+        v += "{:<7s}".format(str(summary[metric]['U5']))
+        k += "{:<7s}".format('<=10')
+        v += "{:<7s}".format(str(summary[metric]['U10']))
+        k += "{:<7s}".format('<=30')
+        v += "{:<7s}".format(str(summary[metric]['U30']))
         
         print(k+"\n"+v)
         

@@ -62,12 +62,12 @@ Here is example of the result of the analysis:
 ```
     "Summary": {  
       "Average": {  
-        "<=5%": 10,   
-        "<=10%": 13,   
-        "<=30%": 14,  
-        "Min": "0.0%",   
-        "Max": "15.0%",   
-        "Mean": "3.2%",
+        "U5%": 10,   
+        "U10%": 13,   
+        "U30%": 14,  
+        "Min": 0,   
+        "Max": 15,   
+        "Mean": 3,
         "Histogram": [  
           [  
             10,   
@@ -81,12 +81,12 @@ Here is example of the result of the analysis:
         ]  
       },   
       "Maximum": {  
-        "<=5%": 1,   
-        "<=10%": 2,   
-        "<=30%": 7  
-        "Min": "3.0%",   
-        "Max": "100.0%",   
-        "Mean": "54.8%",
+        "U5%": 1,   
+        "U10%": 2,   
+        "U30%": 7  
+        "Min": 3,   
+        "Max": 100,   
+        "Mean": 54,
         "Histogram": [  
           [  
             10,   
@@ -99,17 +99,23 @@ Here is example of the result of the analysis:
           ]  
         ]  
       },   
+      "Efficiency": [
+        "Average": 49,
+        "Efficient": 60,
+        "Efficiency": 35,
+        "CostLevel": 1000
+      ],  
       "InstanceTypes": [  
         [  
           "m4.xlarge",   
-          1  
+          "1"  
         ],   
         ...  
       ],
       "Regions": [
         [
           "us-west-2",
-          3
+          "3"
         ]
         ...
       ],
