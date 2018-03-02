@@ -234,12 +234,12 @@ def PrintSummary(result):
     PrintEfficiency(summary)
     PrintUnderUtilized(summary)
 
-def AnalyzeStats(instances, url, verbose, threshold):
+def AnalyzeStats(instances, url, quiet, threshold):
     '''
     Send stats to server and get save result.
     :param instances: ec2 instances with stats
     :param url: server address
-    :param verbose: print result on screen
+    :param quiet: not to print result on screen
     '''
     print("Analyzing stats ...")
     headers = {'Content-type': 'application/json'}
@@ -248,7 +248,7 @@ def AnalyzeStats(instances, url, verbose, threshold):
     response = requests.post(url, data=json.dumps(instances,default=DatetimeConverter), headers=headers, verify=True)
     result = response.json()
     SaveObject(result, 'ec2summary')
-    if verbose:
+    if not quiet:
         PrintSummary(result)
 
 def LoadStatsFile(fileName):
@@ -302,9 +302,9 @@ def ParseArgs(arg):
     parser.add_argument("-k", "--access_key", dest="accessKey", help="access key", default='', required=False)
     parser.add_argument("-s", "--secret_key", dest="secretAccess", help="secret access key", default='', required=False)
     parser.add_argument("-u", "--url", dest="url", help="api server url", default=SERVER_URL, required=False)
-    parser.add_argument("-a", "--analyze", dest="analyze", help="send stats to server to analyze", type=bool, default=True, required=False)
+    parser.add_argument("--noanalysis", help="skip analysis", action="store_true")
     parser.add_argument("-l", "--load_stats", dest="loadStats", help="stats file name to load data from", default='', required=False)
-    parser.add_argument("-v", "--verbose", dest="verbose", help="print summary details", type=bool, default=True, required=False)
+    parser.add_argument("--quiet", help="no printing summary", action="store_true")
     parser.add_argument("-t", "--threshold", dest="threshold", help="[average, max] CPU threshold ", nargs=2, default=[5,30], required=False)
     parser.add_argument("-c", "--config_path", dest="configPath", help="Parent path to config file", default='', required=False)
     parser.add_argument("-p", "--profile", dest="profile", help="AWS credential profile", default='default', required=False)
@@ -322,6 +322,6 @@ if __name__ == "__main__":
         instances = CollectCpuStatsAll(REGION_LIST, accessKey, secretAccess)
         SaveObject(instances, 'ec2stats')
         
-    if args.analyze:
-        AnalyzeStats(instances, args.url, args.verbose, args.threshold)
+    if not args.noanalysis:
+        AnalyzeStats(instances, args.url, args.quiet, args.threshold)
     
